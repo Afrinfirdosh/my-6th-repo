@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:validation="http://www.mulesoft.org/schema/mule/validation" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f2328151-66ad-478a-8e0e-cf12a5a0951f" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<sub-flow name="SubFlow" doc:id="5ce8cd3e-a29c-4d04-8127-911d25d2d76e" >
+		<logger level="INFO" doc:name="Logger" doc:id="c7a1a531-e6d7-49d2-af17-cc9cb307930c" />
+		<logger level="INFO" doc:name="Logger" doc:id="293c128f-1d13-4b07-abd3-0a0bd6c2a0fe" />
+		<flow-ref doc:name="Flow Reference" doc:id="19957849-b48e-461e-b998-8e5f289e1d90" name="mainflow1"/>
+		<logger level="INFO" doc:name="Logger" doc:id="5ddcd466-3510-4fda-8230-5ac6180fdcb1" />
+	</sub-flow>
+	<flow name="privateflow" doc:id="b13901ae-b7af-471d-b8cd-72bb9b4201dd" >
+		<logger level="INFO" doc:name="Logger" doc:id="1588a9eb-58d0-4d54-acd6-b46b2b968909" />
+		<logger level="INFO" doc:name="Logger" doc:id="45ea8123-eab5-411f-bc7a-880e3ac79c17" />
+		<flow-ref doc:name="Flow Reference" doc:id="16bf10cc-41a5-4828-b5f6-72a2acf4e5fb" name="SubFlow"/>
+		<validation:is-null doc:id="cbf7e6cd-76be-4c4d-badf-1ac457c2a385" value="#[payload]"/>
+		<logger level="INFO" doc:name="Logger" doc:id="813db1f6-23c5-4e60-afb3-cddee0270f85" />
+		<error-handler>
+			<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="edbefc08-c4ec-4654-996d-e5a1ad836d48" >
+				<logger level="INFO" doc:name="Logger" doc:id="2c43e879-cef6-4f36-8c32-d88c405f8280" />
+				<logger level="INFO" doc:name="Logger" doc:id="c195d73b-803c-4dd0-8f07-d4de81680c36" />
+			</on-error-continue>
+		</error-handler>
+	</flow>
+	<flow name="mainflow" doc:id="68e2f535-1ee9-4913-a617-c1aab3a57a9a" >
+		<http:listener doc:name="Listener" doc:id="52193ca9-3eca-49ee-959d-2a3a8dca5f24" config-ref="HTTP_Listener_config" path="/test"/>
+		<logger level="INFO" doc:name="Logger" doc:id="6d8c6118-443b-4046-942e-93c30ca26a75" />
+		<flow-ref doc:name="Flow Reference" doc:id="bf72aaf2-0f75-4a64-a86e-de75e3ce35a8" name="privateflow"/>
+		<logger level="INFO" doc:name="Logger" doc:id="60a6c202-e8dc-470c-b1b0-2865023b8411" />
+		<logger level="INFO" doc:name="Logger" doc:id="08187286-fa66-447c-89c0-1e4294eabe2c" />
+		<error-handler>
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="68a4e641-496c-4066-bde7-dac84d56f9b0" >
+				<logger level="INFO" doc:name="Logger" doc:id="e08924d5-f129-44cc-a4f9-87f64dd58164" />
+				<logger level="INFO" doc:name="Logger" doc:id="2ea410b8-b058-440d-802d-3190cfd51ca2" />
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="mainflow1" doc:id="80896121-287d-4825-8742-b52183576df4" >
+		<logger level="INFO" doc:name="Logger" doc:id="f39cf37f-389d-41dc-9174-0fb81fd61f82" />
+		<logger level="INFO" doc:name="Logger" doc:id="2f129a30-6a0f-461e-a152-6407738e2c81" />
+	</flow>
+</mule>
